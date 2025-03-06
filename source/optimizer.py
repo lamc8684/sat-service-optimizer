@@ -55,6 +55,8 @@ class GreedyLazyOptimizer(MinFuelMaxRevenue):
             weighted_data_frame["fuel_cost"].replace(0, float("inf"))
         )
 
+        weighted_data_frame["original_index"] = weighted_data_frame.index
+
         # Remove any NaN or infinite values
         weighted_data_frame = weighted_data_frame.dropna().replace([float("inf"), -float("inf")], 0)
 
@@ -68,7 +70,7 @@ class GreedyLazyOptimizer(MinFuelMaxRevenue):
 
         for index in range(0, len(weighted_service_options)):
             if available_fuel - weighted_service_options.loc[index, "fuel_cost"] >= 0:
-                self.service_path.append(index)
+                self.service_path.append(weighted_service_options.loc[index, "original_index"])
                 max_revenue += weighted_service_options.loc[index, "revenue"]
                 available_fuel = available_fuel - weighted_service_options.loc[index, "fuel_cost"]
 
